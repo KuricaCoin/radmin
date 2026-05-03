@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radmin Сервера</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: transparent;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Frosted Glass эффект */
+        .widget {
+            background: rgba(10, 25, 47, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 150, 255, 0.3);
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            display: block;
+        }
+        
+        .widget-header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .servers-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        /* Анимация появления серверов */
+        .server-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(0, 150, 255, 0.1);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: serverAppear 0.4s ease forwards;
+        }
+        
+        @keyframes serverAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Задержки для каждого сервера */
+        .server-item:nth-child(1) { animation-delay: 0.05s; }
+        .server-item:nth-child(2) { animation-delay: 0.10s; }
+        .server-item:nth-child(3) { animation-delay: 0.15s; }
+        .server-item:nth-child(4) { animation-delay: 0.20s; }
+        .server-item:nth-child(5) { animation-delay: 0.25s; }
+        .server-item:nth-child(6) { animation-delay: 0.30s; }
+        .server-item:nth-child(7) { animation-delay: 0.35s; }
+        .server-item:nth-child(8) { animation-delay: 0.40s; }
+        .server-item:nth-child(9) { animation-delay: 0.45s; }
+        .server-item:nth-child(10) { animation-delay: 0.50s; }
+        .server-item:nth-child(11) { animation-delay: 0.55s; }
+        .server-item:nth-child(12) { animation-delay: 0.60s; }
+        .server-item:nth-child(13) { animation-delay: 0.65s; }
+        .server-item:nth-child(14) { animation-delay: 0.70s; }
+        .server-item:nth-child(15) { animation-delay: 0.75s; }
+        
+        .server-item:hover {
+            background: rgba(0, 150, 255, 0.1);
+            border-color: rgba(0, 150, 255, 0.4);
+            transform: translateX(5px);
+        }
+        
+        .server-ip {
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .server-motd {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            margin-top: 8px;
+            word-break: break-word;
+        }
+        
+        .server-port {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            margin-top: 6px;
+            font-family: monospace;
+        }
+        
+        .server-time {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            margin-top: 6px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #ef4444;
+            font-size: 13px;
+        }
+        
+        .refresh-info {
+            text-align: center;
+            padding: 12px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            border-top: 1px solid rgba(0, 150, 255, 0.2);
+            margin-top: 15px;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.5);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.8);
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget">
+        <div class="widget-header">
+            <div class="logo-area">
+                <img src="radminlogo.svg" alt="Radmin" class="logo-icon" onerror="this.style.display='none'">
+                <h1>Radmin Сервера</h1>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="serverCount">0</div>
+                <div class="stat-label">Серверов онлайн</div>
+            </div>
+        </div>
+        
+        <div class="servers-list" id="serversList">
+            <div class="loading">Загрузка серверов...</div>
+        </div>
+        
+        <div class="refresh-info">
+            Автообновление каждые 10 секунд
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVlmR7JsxP0yfR4EQYmecZ2qzigqVkzYY",
+            authDomain: "radminservers.firebaseapp.com",
+            databaseURL: "https://radminservers-default-rtdb.firebaseio.com",
+            projectId: "radminservers",
+            storageBucket: "radminservers.firebasestorage.app",
+            messagingSenderId: "12810811697",
+            appId: "1:12810811697:web:a17080d449c77cad921810",
+            measurementId: "G-MJC1SW954W"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const serversRef = database.ref('/servers');
+        
+        function formatTime(timestamp) {
+            if (!timestamp) return 'никогда';
+            const date = new Date(timestamp * 1000);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            
+            if (diff < 60) return diff + ' сек назад';
+            if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
+            return date.toLocaleDateString();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const notification = document.createElement('div');
+                notification.textContent = 'IP скопирован!';
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: rgba(6, 182, 212, 0.9);
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    z-index: 1000;
+                    animation: fadeOut 2s;
+                    backdrop-filter: blur(4px);
+                    font-size: 12px;
+                    font-family: Montserrat, sans-serif;
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 2000);
+            });
+        }
+        
+        function renderServers(data) {
+            const container = document.getElementById('serversList');
+            const serverCount = document.getElementById('serverCount');
+            
+            if (!data || !data.servers || data.servers.length === 0) {
+                container.innerHTML = '<div class="loading">Серверов не найдено</div>';
+                serverCount.textContent = '0';
+                return;
+            }
+            
+            serverCount.textContent = data.count || data.servers.length;
+            
+            const serversHtml = data.servers.map((server, index) => `
+                <div class="server-item" onclick="copyToClipboard('${server.ip}')">
+                    <div class="server-ip">
+                        ${server.ip}
+                    </div>
+                    <div class="server-motd">${escapeHtml(server.motd || 'Нет MOTD')}</div>
+                    <div class="server-port">Порт: ${server.ad || '25565'}</div>
+                    <div class="server-time">Обновлен: ${formatTime(server.last_seen)}</div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = serversHtml;
+        }
+        
+        function showError(error) {
+            const container = document.getElementById('serversList');
+            container.innerHTML = `<div class="error">Ошибка: ${error.message}</div>`;
+        }
+        
+        function showLoading() {
+            const container = document.getElementById('serversList');
+            container.innerHTML = '<div class="loading">Загрузка серверов...</div>';
+        }
+        
+        serversRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                renderServers(data);
+            } else {
+                showError(new Error('Нет данных'));
+            }
+        }, (error) => {
+            showError(error);
+        });
+        
+        showLoading();
+        
+        console.log('Виджет загружен, слушаем Firebase...');
+    </script>
+</body>
+</html>

@@ -3,17 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Radmin Projects | Soon...</title>
+    <title>Radmin Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <video class="blur-layer" id="blurVideo" muted playsinline>
-        <source src="output.webm" type="video/webm">
-    </video>
-    <video class="normal-layer" id="normalVideo" muted playsinline>
-        <source src="output.webm" type="video/webm">
-    </video>
+
+<div class="fixed-video-wrapper" id="videoWrapper">
+    <div class="video-container">
+        <video class="blur-layer" id="blurVideo" muted playsinline>
+            <source src="output.webm" type="video/webm">
+        </video>
+        <video class="normal-layer" id="normalVideo" muted playsinline>
+            <source src="output.webm" type="video/webm">
+        </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="radmin-title" id="radminTitle">Radmin Projects</h1>
+    </div>
+</div>
+
+<div class="scroll-overlay">
+    <div class="pattern-section">
+        <div class="pattern-bg">
+            <div class="transition-gradient"></div>
+            <section class="cards-section" id="cardsSection">
+                <div class="cards-container">
+                    <div class="cards-grid">
+                        <div class="card" id="cardPozor">
+                            <div class="card-image">
+                                <img class="card-img" src="pozor.jpg" alt="Позор Радмина">
+                                <div class="glow-bg"></div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">Позор/Лучшие радмина</div>
+                                <div class="card-desc">
+                                    Самый популярный телеграм канал, посвященный оценке радмин серверов.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" id="cardCommunity">
+                            <div class="card-image">
+                                <div class="placeholder-icon"></div>
+                                <div class="glow-bg"></div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">Radmin VPN Community</div>
+                                <div class="card-desc">
+                                    Телеграм чат, посвященный тематике радмина.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" id="CardSoon">
+                            <div class="card-image">
+                                <div class="placeholder-icon"></div>
+                                <div class="glow-bg"></div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">Скоро... Скоро...</div>
+                                <div class="card-desc">
+                                    Скоро...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="widget-section">
+                <div class="widget-wrapper">
+                    <iframe src="radminservers.html" class="radmin-widget" frameborder="0"></iframe>
+                </div>
+            </div>
+            
+            <div class="extra-space"></div>
+            
+            <footer>
+                <span>Radmin Projects</span>
+            </footer>
+        </div>
+    </div>
 </div>
 
 <script src="video.js"></script>
